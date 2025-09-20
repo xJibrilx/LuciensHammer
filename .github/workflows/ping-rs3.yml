@@ -1,0 +1,27 @@
+name: RS3 Logger (every minute)
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"   # every 1 minute (UTC)
+  workflow_dispatch:         # allow manual run from the Actions tab
+
+jobs:
+  call-endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Apps Script endpoint
+        env:
+          RS3_WEBAPP_URL: ${{ secrets.RS3_WEBAPP_URL }}
+        run: |
+          if [ -z "$RS3_WEBAPP_URL" ]; then
+            echo "Missing secret RS3_WEBAPP_URL"
+            exit 1
+          fi
+
+          # Optional: small random jitter (0–20s) to avoid being too predictable
+          sleep $((RANDOM % 20))
+
+          # Call with curl (3 retries, 5s max per try)
+          curl -sS --max-time 5 --retry 3 --retry-delay 2 \
+               -H "User-Agent: RS3-GitHubActions/1.0" \
+               "$RS3_WEBAPP_URL"
