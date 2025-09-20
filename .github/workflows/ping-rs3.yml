@@ -2,7 +2,7 @@ name: RS3 Logger (every minute)
 
 on:
   schedule:
-    - cron: "*/2 * * * *"   # every 1 minute (UTC)
+    - cron: "*/2 * * * *"   # every 2 minute (UTC)
   workflow_dispatch:         # allow manual run from the Actions tab
 
 jobs:
